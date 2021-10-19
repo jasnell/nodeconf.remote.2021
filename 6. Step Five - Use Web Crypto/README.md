@@ -1,3 +1,3 @@
 # The problem
 
-Modify the module so that it uses Web Crypto API instead of Node.js crypto.
+There's a very subtle bug that was introduced in Step Four... Can you find it?

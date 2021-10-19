@@ -4,11 +4,13 @@ import {
   Writable,
 } from 'node:stream';
 
-const pipeline = Pipeline();
+const pipeline = Pipeline({
+  key: Buffer.from('a'.repeat(64), 'hex'),
+  iv: Buffer.from('b'.repeat(32), 'hex'),
+});
 
 try {
   const ac = new AbortController();
-
 
   await pipeline(
       Readable.toWeb(process.stdin),

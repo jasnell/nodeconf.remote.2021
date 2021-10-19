@@ -42,10 +42,10 @@ function getCipherStream(key, iv) {
 
   return new TransformStream({
     transform(chunk, controller) {
-      controller.enqueue(cipher.update(chunk, 'binary', 'binary'));
+      controller.enqueue(cipher.update(chunk));
     },
     flush(controller) {
-      controller.enqueue(cipher.final('binary'));
+      controller.enqueue(cipher.final());
       controller.terminate();
     }
   });
