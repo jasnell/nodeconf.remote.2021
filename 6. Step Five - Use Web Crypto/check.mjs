@@ -29,15 +29,15 @@ function createDecipher() {
           [ 'decrypt' ]);
     },
     async transform(chunk, controller) {
-      controller.enqueue(
-        await decrypt(
-          {
-            name: 'AES-CTR',
-            counter: Buffer.from('b'.repeat(32), 'hex'),
-            length: 128,
-          },
-          this.cipherKey,
-          chunk));
+      const data = await decrypt(
+        {
+          name: 'AES-CTR',
+          counter: Buffer.from('b'.repeat(32), 'hex'),
+          length: 128,
+        },
+        this.cipherKey,
+        chunk);
+      controller.enqueue(data);
     },
     flush(controller) {
       controller.terminate();
@@ -55,7 +55,7 @@ function getToBuffer() {
 
 let stream = Readable.toWeb(process.stdin);
 stream = stream.pipeThrough(createDecipher());
-//stream = stream.pipeThrough(new DecompressionStream('gzip'));
+// stream = stream.pipeThrough(new DecompressionStream('gzip'));
 stream = stream.pipeThrough(getToBuffer());
 await stream.pipeTo(Writable.toWeb(process.stdout));
 

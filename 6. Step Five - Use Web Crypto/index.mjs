@@ -34,12 +34,12 @@ function getOption(options, name, length) {
   return getRandomValues(new Uint8Array(length));
 }
 
-// function getCompressionStreamOrPolyfill() {
-//   if (typeof CompressionStream === 'function') {
-//     return new CompressionStream('gzip');
-//   }
-//   return Duplex.toWeb(createGzip());
-// }
+function getCompressionStreamOrPolyfill() {
+  if (typeof CompressionStream === 'function') {
+    return new CompressionStream('gzip');
+  }
+  return Duplex.toWeb(createGzip());
+}
 
 function getCipherStream(key, iv) {
   return new TransformStream({
@@ -92,9 +92,9 @@ export function Pipeline(options = {}) {
     }
 
     source = source.pipeThrough(new TextDecoderStream('utf-8'), { signal });
-    //source = source.pipeThrough(getCompressionStreamOrPolyfill(), { signal });
+//    source = source.pipeThrough(getCompressionStreamOrPolyfill(), { signal });
     source = source.pipeThrough(getCipherStream(key, iv), { signal });
     source = source.pipeThrough(getToBuffer(), { signal });
-    return source.pipeTo(destination, { signal });
+    return source.pipeTo(destination, /*{ signal, preventClose: true }*/);
   }
 }
